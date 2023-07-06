@@ -1,0 +1,36 @@
+version: '3'
+
+services:
+
+  mongo:
+    image: mongo
+    restart: unless-stopped
+    env_file:
+      - ./.env
+    expose:
+      - 27017
+    ports:
+      - "27017:27017"
+
+  todo-backend:
+    build: './backend'
+    image: todo-backend:latest
+    env_file:
+      - ./.env
+    restart: unless-stopped
+    depends_on:
+      - mongo
+    ports:
+      - "8000:8000"
+
+  todo-frontend:
+    build: './frontend'
+    image: todo-frontend:latest
+    env_file:
+      - ./.env
+    restart: unless-stopped
+    depends_on:
+      - mongo
+    ports:
+      - "3000:3000"
+
